@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>JL-RadioList</title>
+		
+		<style>
+			.radio-list-container {
+				position: absolute;
+				/*top: 1%;*/
+				top: 40%;
+				right: 0%;
+				text-align: right;
+				padding: 5px;
+				font-family: sans-serif;
+				font-weight: bold;
+				color: rgb(1, 176, 240);
+				font-size: 0.6vw;
+				text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+			}
+			
+			.talking {
+				color: rgba(244, 196, 65, 255);
+			}
+		</style>
+		<script type="text/javascript">
+			let speakerEnabled = true;
+			
+			window.addEventListener("message", function(event) {
+				var item = event.data;
+
+				if (item.radioId != null) {
+					let radioListElem = document.getElementById("radio-list");
+
+					if (!radioListElem.firstChild) { //add radio list header
+						let listHeader = document.createElement("div");
+
+						listHeader.id = "radio-list-header";
+						//listHeader.textContent = "\uD83D\uDCE1Radio List";
+						listHeader.textContent = "\uD83D\uDCE1Radio " + item.channel;
+						listHeader.style.textDecorationLine = "underline";
+
+						radioListElem.appendChild(listHeader);
+					}
+
+					if (item.radioName != null) {
+						let listItem = document.createElement("div");
+
+						listItem.id = "radio-list-item-" + item.radioId;
+						listItem.textContent = item.radioName + (item.self ? "\uD83D\uDD38" : "\uD83D\uDD39");
+
+						radioListElem.appendChild(listItem);
+					} else if (item.radioTalking != null) {
+						let listItem = document.getElementById("radio-list-item-" + item.radioId)
+						
+						if (item.radioTalking) {
+							listItem.className = "talking"
+						} else {
+							listItem.className = ""
+						}
+					} else {
+						let listItem = document.getElementById("radio-list-item-" + item.radioId)
+						radioListElem.removeChild(listItem);
+					}
+				}
+
+				if (item.clearRadioList) {
+					let radioListElem = document.getElementById("radio-list");
+
+					while (radioListElem.firstChild) {
+						radioListElem.removeChild(radioListElem.firstChild);
+					}
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<div class="radio-list-container" id="radio-list"></div>
+	</body>
+</html>
