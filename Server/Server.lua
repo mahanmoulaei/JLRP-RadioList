@@ -1,5 +1,5 @@
 local AllPlayers = {}
-local RadioList = {}
+local PlayersInRadioChannelToJoin = {}
 
 AddEventHandler('playerJoined', function()
 	local src = source
@@ -25,57 +25,51 @@ AddEventHandler("playerDropped", function()
 	end
 end)
 
-RegisterNetEvent('pma-voice:setPlayerRadio', function(radioChannel)	
+RegisterNetEvent('pma-voice:setPlayerRadio')	
+AddEventHandler('pma-voice:setPlayerRadio', function(radioChannel)	
 	local src = source
-	local radioChannel = tonumber(radioChannel)
-	if not radioChannel then error(('radioChannel was not a number. Got: %s Expected: Number'):format(type(radioChannel))) return end
+	local radioChannelToJoin = tonumber(radioChannel)
+	if not radioChannelToJoin then error(('radioChannelToJoin was not a number. Got: %s Expected: Number'):format(type(radioChannelToJoin))) return end
 	local PlayerState = Player(src).state
 	local currentRadioChannel = PlayerState.radioChannel
 	
-	if radioChannel == 0 then
-		Disconnect(src, currentRadioChannel, radioChannel)
+	if radioChannelToJoin == 0 then
+		Disconnect(src, currentRadioChannel, radioChannelToJoin)
 	else
-		Connect(src, currentRadioChannel, radioChannel)
+		Connect(src, currentRadioChannel, radioChannelToJoin)
 	end
-	
-	
-	
-	
 end)
 
 function Connect(src, currentRadioChannel, radioChannelToJoin)
 	--CONNECTING
-	--[[if currentRadioChannel > 0 and radioChannelToJoin ~= currentRadioChannel then
-		TriggerClientEvent("JolbakLifeRP-RadioList:Client:DisconnectPlayerCurrentChannel", src)
-	end]]
-	Wait(1000)
-	RadioList = CreateFullRadioListOfChannel(currentRadioChannel)
-	for index, player in pairs(RadioList) do
-		TriggerClientEvent("JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers", player.Source, src, radioChannelToJoin, RadioList)
+	if currentRadioChannel > 0 then -- check if src is already in a radioChannel
+		Disconnect(src, currentRadioChannel, radioChannelToJoin)
 	end
-	RadioList = {}
+	Wait(1000) -- wait for pma-voice to finilize setting the player radio channel 
+	PlayersInRadioChannelToJoin = CreateFullRadioListOfChannel(currentRadioChannel)
+	for index, player in pairs(PlayersInRadioChannelToJoin) do
+		TriggerClientEvent("JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers", player.Source, src, radioChannelToJoin, PlayersInRadioChannelToJoin)
+	end
 end
 
 function Disconnect(src, currentRadioChannel, radioChannelToJoin) 
 	--DISCONNECTING	
-	local playersInRadio = exports['pma-voice']:getPlayersInRadioChannel(currentRadioChannel)
-	TriggerClientEvent("JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers", src, src, radioChannelToJoin, playersInRadio)
-	Wait(1000)
-	for player, isTalking in pairs(playersInRadio) do
-		TriggerClientEvent("JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers", player, src, radioChannelToJoin, playersInRadio)
+	PlayersInCurrentRadioChannel = CreateFullRadioListOfChannel(currentRadioChannel)
+	for index, player in pairs(PlayersInCurrentRadioChannel) do
+		TriggerClientEvent("JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers", player.Source, src, radioChannelToJoin, PlayersInCurrentRadioChannel)
 	end
 end
 
 function CreateFullRadioListOfChannel(RadioChannel)
 	local playersInRadio = exports['pma-voice']:getPlayersInRadioChannel(RadioChannel)
-	RadioList = {}
+	PlayersInRadioChannelToJoin = {}
 	for player, isTalking in pairs(playersInRadio) do
 		--print(('%s is in radio channel currentRadioChannel, isTalking: %s'):format(GetPlayerName(player), currentRadioChannel, isTalking))
 
-		RadioList[player] = {}
-		RadioList[player].Source = player
-		RadioList[player].Name = GetPlayerName(player)
-		RadioList[player].RadioChannel = RadioChannel
+		PlayersInRadioChannelToJoin[player] = {}
+		PlayersInRadioChannelToJoin[player].Source = player
+		PlayersInRadioChannelToJoin[player].Name = GetPlayerName(player)
+		PlayersInRadioChannelToJoin[player].RadioChannel = RadioChannel
 	end
-	return RadioList
+	return PlayersInRadioChannelToJoin
 end
