@@ -49,9 +49,18 @@ AddEventHandler('JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers', functio
 	
 end)
 
+--Set talkingState on radio for another radio member = true
 RegisterNetEvent('pma-voice:setTalkingOnRadio')
 AddEventHandler('pma-voice:setTalkingOnRadio', function(src, talkingState)
+	--print("Talking [{"..src.."} "..talkingState.."]")
 	SendNUIMessage({ radioId = src, radioTalking = talkingState }) -- Set player talking in radio list
+end)
+
+--Set talkingState on radio for self = true
+RegisterNetEvent('pma-voice:radioActive')
+AddEventHandler('pma-voice:radioActive', function(talkingState)
+	--print("Talking [{"..PlayerServerID.."} "..tostring(talkingState).."]")
+	SendNUIMessage({ radioId = PlayerServerID, radioTalking = talkingState }) -- Set player talking in radio list
 end)
 
 RegisterNetEvent('JolbakLifeRP-RadioList:Client:DisconnectPlayerCurrentChannel')
