@@ -1,5 +1,4 @@
 local PlayersInCurrentRadioChannel = {}
-local firstTimeEventGetsCalled = true
 
 AddEventHandler("playerDropped", function()
 	local src = source
@@ -19,17 +18,15 @@ end)
 --This event is located on pma-voice/server/module/radio.lua
 RegisterNetEvent('pma-voice:setPlayerRadio')	
 AddEventHandler('pma-voice:setPlayerRadio', function(channelToJoin)
-	if firstTimeEventGetsCalled == false then	--For Sync With PMA-Voice
-		local src = source	
-		local radioChannelToJoin = tonumber(channelToJoin)
-		if not radioChannelToJoin then print(('radioChannelToJoin was not a number. Got: %s Expected: Number'):format(type(channelToJoin))) return end
-		local currentRadioChannel = Player(src).state.radioChannel
-		--print("\n\nCurrent Radio Channel: "..currentRadioChannel.." - To Join Radio Channel: "..radioChannelToJoin)		
-		if radioChannelToJoin == 0 then
-			Disconnect(src, currentRadioChannel)
-		else
-			Connect(src, currentRadioChannel, radioChannelToJoin)
-		end
+	local src = source	
+	local radioChannelToJoin = tonumber(channelToJoin)
+	if not radioChannelToJoin then print(('radioChannelToJoin was not a number. Got: %s Expected: Number'):format(type(channelToJoin))) return end
+	local currentRadioChannel = Player(src).state.radioChannel
+	--print("\n\nCurrent Radio Channel: "..currentRadioChannel.." - To Join Radio Channel: "..radioChannelToJoin)		
+	if radioChannelToJoin == 0 then
+		Disconnect(src, currentRadioChannel)
+	else
+		Connect(src, currentRadioChannel, radioChannelToJoin)
 	end
 end)
 
