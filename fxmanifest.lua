@@ -10,10 +10,10 @@ shared_scripts {
 	'Config.lua',
 }
 
-ui_page "ui/index.html"
+ui_page "UI/index.html"
 
 files {
-	"ui/index.html"
+	"UI/index.html"
 }
 
 server_script {
