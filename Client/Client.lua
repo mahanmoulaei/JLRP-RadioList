@@ -1,5 +1,4 @@
 local PlayerServerID = GetPlayerServerId(PlayerId())
-local PlayerName = GetPlayerName(PlayerId())
 local PlayersInRadio = {}
 
 RegisterNetEvent('JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers')
@@ -10,20 +9,22 @@ AddEventHandler('JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers', functio
 			local radioChannelToJoin = tostring(RadioChannelToJoin)
 			if Config.RadioChannelName[radioChannelToJoin] and Config.RadioChannelName[radioChannelToJoin] ~= nil then -- Check if the current radioChannel had defined a name in config or not
 				HideTheRadioList() -- Hide and close the radio list in case the player was already in a different radioChannel
-				SendNUIMessage({ radioId = src, radioName = PlayerName, channel = Config.RadioChannelName[radioChannelToJoin], self = true  }) -- Add self player to radio list
 				for index, player in pairs(PlayersInRadio) do
 					if player.Source ~= src then
 						SendNUIMessage({ radioId = player.Source, radioName = player.Name, channel = Config.RadioChannelName[radioChannelToJoin] }) -- Add other radio members of the radio channel
+					else
+						SendNUIMessage({ radioId = src, radioName = player.Name, channel = Config.RadioChannelName[radioChannelToJoin], self = true  }) -- Add self player to radio list
 					end
 					
 				end
 				ResetTheRadioList() -- Delete the PlayersInRadio contents so it opens up memory
 			else
 				HideTheRadioList() -- Hide and close the radio list in case the player was already in a different radioChannel
-				SendNUIMessage({ radioId = src, radioName = PlayerName, channel = radioChannelToJoin, self = true  }) -- Add self player to radio list
 				for index, player in pairs(PlayersInRadio) do
 					if player.Source ~= src then
 						SendNUIMessage({ radioId = player.Source, radioName = player.Name, channel = radioChannelToJoin }) -- Add other radio members of the radio channel
+					else
+						SendNUIMessage({ radioId = src, radioName = player.Name, channel = radioChannelToJoin, self = true  }) -- Add self player to radio list
 					end
 				end
 				ResetTheRadioList() -- Delete the PlayersInRadio contents so it opens up memory
@@ -33,7 +34,6 @@ AddEventHandler('JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers', functio
 			HideTheRadioList() 	-- Hide and close the radio list
 		end
 	elseif src ~= PlayerServerID then
-		-- TODO : test The whole script - specially test the logic of this part!!!
 		if RadioChannelToJoin > 0 then
 			local radioChannelToJoin = tostring(RadioChannelToJoin)
 			if Config.RadioChannelName[radioChannelToJoin] and Config.RadioChannelName[radioChannelToJoin] ~= nil then -- Check if the current radioChannel had defined a name in config or not
