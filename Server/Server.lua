@@ -1,10 +1,9 @@
 local PlayersInCurrentRadioChannel = {}
-
+--TODO : Check The Bug In playerDropped Event
 AddEventHandler("playerDropped", function()
 	local src = source
 	
-	local PlayerState = Player(src).state
-	local currentRadioChannel = PlayerState.radioChannel
+	local currentRadioChannel = Player(src).state.radioChannel
 	
 	local playersInCurrentRadioChannel = CreateFullRadioListOfChannel(currentRadioChannel)
 	for index, player in pairs(playersInCurrentRadioChannel) do
@@ -21,8 +20,7 @@ AddEventHandler('pma-voice:setPlayerRadio', function(channelToJoin)
 	local src = source	
 	local radioChannelToJoin = tonumber(channelToJoin)
 	if not radioChannelToJoin then print(('radioChannelToJoin was not a number. Got: %s Expected: Number'):format(type(channelToJoin))) return end
-	local currentRadioChannel = Player(src).state.radioChannel
-	--print("\n\nCurrent Radio Channel: "..currentRadioChannel.." - To Join Radio Channel: "..radioChannelToJoin)		
+	local currentRadioChannel = Player(src).state.radioChannel		
 	if radioChannelToJoin == 0 then
 		Disconnect(src, currentRadioChannel)
 	else
@@ -35,19 +33,15 @@ function Connect(src, currentRadioChannel, radioChannelToJoin)
 		Disconnect(src, currentRadioChannel)
 	end
 	Wait(1000) -- Wait for pma-voice to finilize setting the player radio channel
-	--CONNECTING	
-	--print("Connecting [{"..GetPlayerName(src).."} To "..radioChannelToJoin.."]")
+
 	local playersInCurrentRadioChannel = CreateFullRadioListOfChannel(radioChannelToJoin)
 	for index, player in pairs(playersInCurrentRadioChannel) do
-		--print("Sending "..src.."("..player.Name..") to "..player.Source)
 		TriggerClientEvent("JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers", player.Source, src, radioChannelToJoin, playersInCurrentRadioChannel)
 	end
 	playersInCurrentRadioChannel = {}
 end
 
 function Disconnect(src, currentRadioChannel) 
-	--DISCONNECTING	
-	--print("Diconnecting [{"..GetPlayerName(src).."} From "..currentRadioChannel.."]")
 	local playersInCurrentRadioChannel = CreateFullRadioListOfChannel(currentRadioChannel)
 	TriggerClientEvent("JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers", src, src, 0, playersInCurrentRadioChannel)
 	for index, player in pairs(playersInCurrentRadioChannel) do
@@ -61,11 +55,21 @@ function CreateFullRadioListOfChannel(RadioChannel)
 	for player, isTalking in pairs(playersInRadio) do
 		playersInRadio[player] = {}
 		playersInRadio[player].Source = player
-		playersInRadio[player].Name = GetPlayerName(player)
-		--print("Inside CreateFullRadioListOfChannel -> RadioChannel: "..RadioChannel)
-		--print("Inside CreateFullRadioListOfChannel -> Source: "..player)
-		--print("Inside CreateFullRadioListOfChannel -> Name: "..GetPlayerName(player))
-		--print("--------------------------------------------------------------------------------")
+		
+		local name
+		
+		if Config.UseRPName then
+			local xPlayer = ESX.GetPlayerFromId(player)		
+			if xPlayer then
+				name = xPlayer.getName()
+			else --extra check to make sure player sends a name to client
+				name = GetPlayerName(player)
+			end
+		else
+			name = GetPlayerName(player)
+		end
+		
+		playersInRadio[player].Name = name
 	end
 	
 	return playersInRadio

@@ -1,4 +1,7 @@
 Config = {}
+
+Config.UseRPName = true
+
 Config.RadioChannelsWithName = {
 	["0"] = "Admin",
 	["1"] = "Police",
