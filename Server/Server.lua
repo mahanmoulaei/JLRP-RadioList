@@ -1,3 +1,20 @@
+local Framework = nil
+local Core = nil
+
+if Config.UseRPName then
+	if GetResourceState('es_extended') ~= 'missing' then
+		Framework = 'ESX'
+		Core = exports['es_extended']:getSharedObject()
+	elseif GetResourceState('qb-core') ~= 'missing' then
+		Framework = 'QB'
+		Core = exports['qb-core']:GetCoreObject()
+	elseif GetResourceState('JLRP-Framework') ~= 'missing' then
+		Framework = 'JLRP'
+		Core = exports['JLRP-Framework']:getSharedObject()
+	end
+end
+
+
 local PlayersInCurrentRadioChannel = {}
 --TODO : Check The Bug In playerDropped Event
 AddEventHandler("playerDropped", function()
@@ -56,19 +73,34 @@ function CreateFullRadioListOfChannel(RadioChannel)
 		playersInRadio[player] = {}
 		playersInRadio[player].Source = player
 		
-		local name
+		local name = nil
 		
 		if Config.UseRPName then
-			local xPlayer = ESX.GetPlayerFromId(player)		
-			if xPlayer then
-				name = xPlayer.getName()
-			else --extra check to make sure player sends a name to client
+			if Framework == 'ESX' then
+				local xPlayer = Core.GetPlayerFromId(player)		
+				if xPlayer then
+					name = xPlayer.getName()
+				end
+			elseif Framework == 'QB' then
+				local xPlayer = Core.Functions.GetPlayer(player)
+				if xPlayer then
+					name = xPlayer.PlayerData.charinfo.firstname..' '..xPlayer.PlayerData.charinfo.lastname 
+				end
+			elseif Framework == 'JLRP' then
+				local xPlayer = Core.GetPlayerFromId(player)		
+				if xPlayer then
+					name = xPlayer.getName()
+				else --extra check to make sure player sends a name to client
+					name = GetPlayerName(player)
+				end
+			end
+		
+			if name == nil then --extra check to make sure player sends a name to client
 				name = GetPlayerName(player)
 			end
 		else
 			name = GetPlayerName(player)
 		end
-		
 		playersInRadio[player].Name = name
 	end
 	
