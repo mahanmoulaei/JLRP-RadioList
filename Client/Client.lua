@@ -93,3 +93,11 @@ end
 function HideTheRadioList()
 	SendNUIMessage({ clearRadioList = true }) -- Clear radio listPlayersInRadio 
 end
+
+if Config.LetPlayersChangeVisibilityOfRadioList then
+	local visibility = true
+	RegisterCommand(Config.RadioListVisibilityCommand,function()
+		visibility = not visibility
+		SendNUIMessage({ changeVisibility = true, visible = visibility })
+	end)
+end

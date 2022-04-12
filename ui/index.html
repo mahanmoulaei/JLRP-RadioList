@@ -27,6 +27,8 @@
 			
 			window.addEventListener("message", function(event) {
 				var item = event.data;
+				
+				
 
 				if (item.radioId != null) {
 					let radioListElem = document.getElementById("radio-list");
@@ -68,6 +70,14 @@
 
 					while (radioListElem.firstChild) {
 						radioListElem.removeChild(radioListElem.firstChild);
+					}
+				}
+				
+				if (item.changeVisibility) {
+					if (item.visible == true) {
+						document.getElementById("radio-list").style.display = 'block';
+					} else if (item.visible == false) {
+						document.getElementById("radio-list").style.display = 'none';
 					}
 				}
 			});
