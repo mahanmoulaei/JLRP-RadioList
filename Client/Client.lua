@@ -3,8 +3,8 @@ local PlayersInRadio = {}
 local firstTimeEventGetsTriggered = true
 local RadioChannelsName = {--[[Will Be Automatically Filled With Channels' Name => e.g. every frequency between 0 and 1 will be named to Admin Radio]]}
 
-RegisterNetEvent('JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers')
-AddEventHandler('JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers', function(src, RadioChannelToJoin, PlayersInRadioChannel)
+RegisterNetEvent('JLRP-RadioList:Client:SyncRadioChannelPlayers')
+AddEventHandler('JLRP-RadioList:Client:SyncRadioChannelPlayers', function(src, RadioChannelToJoin, PlayersInRadioChannel)
 	if firstTimeEventGetsTriggered then
 		for i, v in pairs(Config.RadioChannelsWithName) do
 			local frequency = tonumber(i)
@@ -78,8 +78,8 @@ AddEventHandler('pma-voice:radioActive', function(talkingState)
 	SendNUIMessage({ radioId = PlayerServerID, radioTalking = talkingState }) -- Set player talking in radio list
 end)
 
-RegisterNetEvent('JolbakLifeRP-RadioList:Client:DisconnectPlayerCurrentChannel')
-AddEventHandler('JolbakLifeRP-RadioList:Client:DisconnectPlayerCurrentChannel', function()
+RegisterNetEvent('JLRP-RadioList:Client:DisconnectPlayerCurrentChannel')
+AddEventHandler('JLRP-RadioList:Client:DisconnectPlayerCurrentChannel', function()
 	ResetTheRadioList() -- Delete the PlayersInRadio contents so it opens up memory
 	HideTheRadioList()
 end)
@@ -100,4 +100,9 @@ if Config.LetPlayersChangeVisibilityOfRadioList then
 		visibility = not visibility
 		SendNUIMessage({ changeVisibility = true, visible = visibility })
 	end)
+	TriggerEvent("chat:addSuggestion", "/"..Config.RadioListVisibilityCommand, "Show/Hide Radio List")
+end
+
+if Config.LetPlayersSetTheirOwnNameInRadio then
+	TriggerEvent("chat:addSuggestion", "/"..Config.RadioListChangeNameCommand, "Customize your name to be shown in radio list", { { name = 'customized name', help = "Enter your desired name to be shown in radio list" } })
 end

@@ -1,3 +1,4 @@
+local PMA = exports['pma-voice']
 local Framework = nil
 local Core = nil
 
@@ -14,7 +15,7 @@ if Config.UseRPName then
 	end
 end
 
-
+local CustomNames = {}
 local PlayersInCurrentRadioChannel = {}
 --TODO : Check The Bug In playerDropped Event
 AddEventHandler("playerDropped", function()
@@ -23,12 +24,19 @@ AddEventHandler("playerDropped", function()
 	local currentRadioChannel = Player(src).state.radioChannel
 	
 	local playersInCurrentRadioChannel = CreateFullRadioListOfChannel(currentRadioChannel)
-	for index, player in pairs(playersInCurrentRadioChannel) do
+	for _, player in pairs(playersInCurrentRadioChannel) do
 		if player.Source ~= src then
-			TriggerClientEvent("JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers", player.Source, src, 0, playersInCurrentRadioChannel)
+			TriggerClientEvent("JLRP-RadioList:Client:SyncRadioChannelPlayers", player.Source, src, 0, playersInCurrentRadioChannel)
 		end
 	end
 	playersInCurrentRadioChannel = {}
+	
+	if Config.LetPlayersSetTheirOwnNameInRadio and Config.ResetPlayersCustomizedNameOnExit then
+		local playerIdentifier = GetIdentifier(src)
+		if CustomNames[playerIdentifier] and CustomNames[playerIdentifier] ~= nil then
+			CustomNames[playerIdentifier] = nil
+		end
+	end
 end)
 
 --This event is located on pma-voice/server/module/radio.lua
@@ -52,59 +60,90 @@ function Connect(src, currentRadioChannel, radioChannelToJoin)
 	Wait(1000) -- Wait for pma-voice to finilize setting the player radio channel
 
 	local playersInCurrentRadioChannel = CreateFullRadioListOfChannel(radioChannelToJoin)
-	for index, player in pairs(playersInCurrentRadioChannel) do
-		TriggerClientEvent("JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers", player.Source, src, radioChannelToJoin, playersInCurrentRadioChannel)
+	for _, player in pairs(playersInCurrentRadioChannel) do
+		TriggerClientEvent("JLRP-RadioList:Client:SyncRadioChannelPlayers", player.Source, src, radioChannelToJoin, playersInCurrentRadioChannel)
 	end
 	playersInCurrentRadioChannel = {}
 end
 
 function Disconnect(src, currentRadioChannel) 
 	local playersInCurrentRadioChannel = CreateFullRadioListOfChannel(currentRadioChannel)
-	TriggerClientEvent("JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers", src, src, 0, playersInCurrentRadioChannel)
-	for index, player in pairs(playersInCurrentRadioChannel) do
-		TriggerClientEvent("JolbakLifeRP-RadioList:Client:SyncRadioChannelPlayers", player.Source, src, 0, playersInCurrentRadioChannel)
+	TriggerClientEvent("JLRP-RadioList:Client:SyncRadioChannelPlayers", src, src, 0, playersInCurrentRadioChannel)
+	for _, player in pairs(playersInCurrentRadioChannel) do
+		TriggerClientEvent("JLRP-RadioList:Client:SyncRadioChannelPlayers", player.Source, src, 0, playersInCurrentRadioChannel)
 	end
 	playersInCurrentRadioChannel = {}
 end
 
 function CreateFullRadioListOfChannel(RadioChannel)
-	local playersInRadio = exports['pma-voice']:getPlayersInRadioChannel(RadioChannel)
+	local playersInRadio = PMA:getPlayersInRadioChannel(RadioChannel)
 	for player, isTalking in pairs(playersInRadio) do
 		playersInRadio[player] = {}
-		playersInRadio[player].Source = player
-		
-		local name = nil
-		
-		if Config.UseRPName then
-			if Framework == 'ESX' then
-				local xPlayer = Core.GetPlayerFromId(player)		
-				if xPlayer then
-					name = xPlayer.getName()
-				end
-			elseif Framework == 'QB' then
-				local xPlayer = Core.Functions.GetPlayer(player)
-				if xPlayer then
-					name = xPlayer.PlayerData.charinfo.firstname..' '..xPlayer.PlayerData.charinfo.lastname 
-				end
-			elseif Framework == 'JLRP' then
-				local xPlayer = Core.GetPlayerFromId(player)		
-				if xPlayer then
-					name = xPlayer.getName()
-				else --extra check to make sure player sends a name to client
-					name = GetPlayerName(player)
-				end
-			end
-		
-			if name == nil then --extra check to make sure player sends a name to client
-				name = GetPlayerName(player)
-			end
-		else
-			name = GetPlayerName(player)
-		end
-		playersInRadio[player].Name = name
+		playersInRadio[player].Source = player		
+		playersInRadio[player].Name = GetPlayerNameForRadio(player)
 	end
 	
 	return playersInRadio
 end
 
+function GetPlayerNameForRadio(source)
+	if Config.LetPlayersSetTheirOwnNameInRadio then
+		local playerIdentifier = GetIdentifier(source)
+		if CustomNames[playerIdentifier] and CustomNames[playerIdentifier] ~= nil then
+			return CustomNames[playerIdentifier]
+		end
+	end
+	
+	if Config.UseRPName then	
+		local name = nil
+		if Framework == 'ESX' then
+			local xPlayer = Core.GetPlayerFromId(source)		
+			if xPlayer then
+				name = xPlayer.getName()
+			end
+		elseif Framework == 'QB' then
+			local xPlayer = Core.Functions.GetPlayer(source)
+			if xPlayer then
+				name = xPlayer.PlayerData.charinfo.firstname..' '..xPlayer.PlayerData.charinfo.lastname 
+			end
+		elseif Framework == 'JLRP' then
+			local xPlayer = Core.GetPlayerFromId(source)		
+			if xPlayer then
+				name = xPlayer.getName()
+			end
+		end	
+		if name == nil then --extra check to make sure player sends a name to client
+			name = GetPlayerName(source)
+		end
+		return name
+	else
+		return GetPlayerName(source)
+	end
+end
 
+if Config.LetPlayersSetTheirOwnNameInRadio then
+	local commandLength = string.len(Config.RadioListChangeNameCommand)
+	local argumentStartIndex = commandLength + 2
+	RegisterCommand(Config.RadioListChangeNameCommand, function(source, args, rawCommand)
+		local _source = source
+		if _source > 0 then
+			local customizedName = rawCommand:sub(argumentStartIndex)
+			if customizedName ~= "" and customizedName ~= " " and customizedName ~= nil then
+				CustomNames[GetIdentifier(_source)] = customizedName			
+				local currentRadioChannel = Player(_source).state.radioChannel
+				if currentRadioChannel > 0 then
+					Connect(_source, currentRadioChannel, currentRadioChannel)
+				end				
+			end
+		end
+	end)
+end
+
+function GetIdentifier(source)
+	for _, v in ipairs(GetPlayerIdentifiers(source)) do
+		if string.match(v, 'license:') then
+			local identifier = string.gsub(v, 'license:', '')
+			return identifier
+		end
+	end
+end

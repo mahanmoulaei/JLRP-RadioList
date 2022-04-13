@@ -9,11 +9,14 @@
 * Config to show players’ RP name (needs framework integration - works with ESX-Legacy & QB-Core by default)
 * Changes the color of each player when they talk on radio
 * Ability to name radio channels in config (e.g. all frequencies between 0 and 1 called "Admin Radio", between 1 and 2 called "Police Radio" & etc)
+* Ability to toggle visibility of the list for self
+* Ability to customize self name on the radio list
 * Super easy to integrate other frameworks compatibility
 
 <hr>
 
 ## Changelog
+* V1.4 : Add config to let players customize how their name is displayed on the radio list
 * V1.3 : Add config to let players hide/show the list
 * V1.2 : Add config to use RP name for QB-Core
 * V1.1 : Add config to use RP name for ESX-Legacy
