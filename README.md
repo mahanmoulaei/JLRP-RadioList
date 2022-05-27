@@ -1,48 +1,39 @@
-<h1 align="center"><b>JLRP-RadioList</b></h1>
-<h3 align="center">Radio List To Be Used With PMA-VOICE In FiveM</h3>
-<h4 align="center">Shows The List of Players In a Radio Frequency</h4>
+<div align="center">
+<h1 align="center"><b>JLRP-VehicleShop</b></h1>
+<img src="https://dunb17ur4ymx4.cloudfront.net/packages/images/e1070e80385bdc806fd05c5e7c36400ccccb8670.jpeg"></img>
+</div>
+<p>Vehicle shop script that lets you have multiple location for shop position or sell position. Each shop position would let you choose what type/category of vehicle you want to be shown through its menu. Furthermore, each sell position would let you choose what type/category of vehicle can be sold in it.&nbsp;</p>
+
 <br>
-<p align="center"><img src="https://forum.cfx.re/uploads/default/original/4X/a/4/5/a45b6ce284909392df9a7ad6c1bb736bb1637978.png"/></p>
+<p>Overall, <strong>JLRP-VehicleShop</strong> meets your need of having multiple vehicle shop and aircraft shop scripts and their corresponding database tables for each shop, <strong>ALL IN JUST ONE RESOURCE!</strong></p>
 
-## Features
-* Can be used as standalone
-* Config to show players’ RP name (needs framework integration - works with ESX-Legacy & QB-Core by default)
-* Changes the color of each player when they talk on radio
-* Ability to name radio channels in config (e.g. all frequencies between 0 and 1 called "Admin Radio", between 1 and 2 called "Police Radio" & etc)
-* Ability to toggle visibility of the list for self
-* Ability to customize self name on the radio list
-* Super easy to integrate other frameworks compatibility
+<p>
+	<br>
+</p>
 
-<hr>
+<p><strong>[Optimization]</strong></p>
 
-## Changelog
-* V1.4 : Add config to let players customize how their name is displayed on the radio list
-* V1.3 : Add config to let players hide/show the list
-* V1.2 : Add config to use RP name for QB-Core
-* V1.1 : Add config to use RP name for ESX-Legacy
-* V1.0 : Initial creation of the script
+<p><strong>This script is fully optimized.</strong></p>
 
-<hr>
-<br><h3 align='center'>Legal Notices</h3>
-<table><tr><td>
-Copyright (C) 2022 Mahan Moulaei
+<ul>
+	<li><strong>Idle</strong>: 0.00ms;</li>
+	<li><strong>While 8 markers are showing together</strong>: 0.05-0.07ms.</li>
+</ul>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.  
+<br>
 
+<p><strong>[Dependencies]</strong></p>
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.  
+<ul>
+	<li><p><a href="https://github.com/JolbakLife-RolePlay/JLRP-Framework" rel="noreferrer noopener" target="_blank"><strong>JLRP-Framework</strong></a> or <a href="https://github.com/esx-framework/esx-legacy" rel="noreferrer noopener" target="_blank"><strong>ESX</strong></a></p></li>
+  
+  <li><p><a href="https://github.com/mkafrin/PolyZone" rel="noreferrer noopener" target="_blank"><strong>PolyZone</strong></a></p></li>
+                                                                                                
+  <li><p><a href="https://github.com/overextended/ox_lib" rel="noreferrer noopener" target="_blank"><strong>ox_lib</strong></a> (optional)</p></li>                                                                                          
+</ul>
+                                                                                                             
+<p>
+	<br>
+</p>
 
 
-You should have received a copy of the GNU General Public License
-along with this program.  
-If not, see <https://www.gnu.org/licenses/>
-</td></tr>
-<tr><td>
-<p align="center"><a href='https://forum.cfx.re/t/free-list-of-players-in-radio-using-pma-voice/4838157'>FiveM Forum Post</a></p>
-</td></tr></table>
