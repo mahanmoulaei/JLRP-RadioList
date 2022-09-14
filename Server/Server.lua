@@ -17,17 +17,18 @@ end
 
 local CustomNames = {}
 local PlayersInCurrentRadioChannel = {}
---TODO : Check The Bug In playerDropped Event
+local CurrentResourceName = GetCurrentResourceName()
+
 AddEventHandler("playerDropped", function()
 	local src = source
 	
-	local currentRadioChannel = Player(src).state.radioChannel
+	local currentRadioChannel = Player(src).state.currentRadioChannel
 	
 	local playersInCurrentRadioChannel = CreateFullRadioListOfChannel(currentRadioChannel)
 	for _, player in pairs(playersInCurrentRadioChannel) do
-		if player.Source ~= src then
+		--if player.Source ~= src then
 			TriggerClientEvent("JLRP-RadioList:Client:SyncRadioChannelPlayers", player.Source, src, 0, playersInCurrentRadioChannel)
-		end
+		--end
 	end
 	playersInCurrentRadioChannel = {}
 	
@@ -42,10 +43,11 @@ end)
 --This event is located on pma-voice/server/module/radio.lua
 RegisterNetEvent('pma-voice:setPlayerRadio')	
 AddEventHandler('pma-voice:setPlayerRadio', function(channelToJoin)
-	local src = source	
+	local src = source
 	local radioChannelToJoin = tonumber(channelToJoin)
 	if not radioChannelToJoin then print(('radioChannelToJoin was not a number. Got: %s Expected: Number'):format(type(channelToJoin))) return end
-	local currentRadioChannel = Player(src).state.radioChannel		
+	local currentRadioChannel = Player(src).state.currentRadioChannel or 0
+	Player(src).state:set('currentRadioChannel', radioChannelToJoin, false)
 	if radioChannelToJoin == 0 then
 		Disconnect(src, currentRadioChannel)
 	else
