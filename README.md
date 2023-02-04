@@ -1,27 +1,9 @@
-<h1 align="center"><b>JLRP-RadioList</b></h1>
-<h2 align="center"><b>**<a href='https://github.com/XProject/x-radiolist'>GET THE UPDATED VERSION HERE</a>**</b></h2>
+<h1 align="center"><b>JLRP-RadioList - Unmaintained</b></h1>
+<h1 align="center"><b>**<a href='https://github.com/XProject/x-radiolist'>GET THE UPDATED VERSION HERE</a>**</b></h1>
 <h3 align="center">Radio List To Be Used With PMA-VOICE In FiveM</h3>
 <h4 align="center">Shows The List of Players In a Radio Frequency</h4>
 <br>
 <p align="center"><img src="https://forum.cfx.re/uploads/default/original/4X/a/4/5/a45b6ce284909392df9a7ad6c1bb736bb1637978.png"/></p>
-
-## Features
-* Can be used as standalone
-* Config to show players’ RP name (needs framework integration - works with ESX-Legacy & QB-Core by default)
-* Changes the color of each player when they talk on radio
-* Ability to name radio channels in config (e.g. all frequencies between 0 and 1 called "Admin Radio", between 1 and 2 called "Police Radio" & etc)
-* Ability to toggle visibility of the list for self
-* Ability to customize self name on the radio list
-* Super easy to integrate other frameworks compatibility
-
-<hr>
-
-## Changelog
-* V1.4 : Add config to let players customize how their name is displayed on the radio list
-* V1.3 : Add config to let players hide/show the list
-* V1.2 : Add config to use RP name for QB-Core
-* V1.1 : Add config to use RP name for ESX-Legacy
-* V1.0 : Initial creation of the script
 
 <hr>
 <br><h3 align='center'>Legal Notices</h3>
