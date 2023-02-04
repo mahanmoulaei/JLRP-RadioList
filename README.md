@@ -1,5 +1,5 @@
 <h1 align="center"><b>JLRP-RadioList</b></h1>
-<h2 align="center"><b>**A NEWER VERSION IS BEING WORKED ON**</b></h2>
+<h2 align="center"><b>**<a href='https://github.com/XProject/x-radiolist'>GET THE UPDATED VERSION HERE</a>**</b></h2>
 <h3 align="center">Radio List To Be Used With PMA-VOICE In FiveM</h3>
 <h4 align="center">Shows The List of Players In a Radio Frequency</h4>
 <br>
